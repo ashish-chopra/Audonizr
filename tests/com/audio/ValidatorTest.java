@@ -17,6 +17,7 @@ public class ValidatorTest implements Test {
 		
 		// check for 0 length input
 		String[] testInput2 = {};
+		v = new Validator(testInput2);
 		assert(!v.validate());
 		
 		// check for illegal inputs

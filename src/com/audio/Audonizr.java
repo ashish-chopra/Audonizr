@@ -16,9 +16,12 @@ public class Audonizr {
 
 	public static void main(String[] args) {
 		
-		Validator inputChecker = new Validator(args);
-		if (inputChecker.validate()) {
+		Validator inputValidator = new Validator(args);
+		if (inputValidator.validate()) {
 			
+		} else {
+			inputValidator.showUsageInstruction();
 		}
+		
 	}
 }
