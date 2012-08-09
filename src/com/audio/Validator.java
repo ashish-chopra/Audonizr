@@ -33,7 +33,7 @@ public class Validator {
 	 * arguments.
 	 * 
 	 */
-	public void displayUsageGuide() {
+	public void showUsageInstruction() {
 		System.out.println("usage: java Audonizr -in <file-name> [-out <file-name>] \n");
 		System.out.println("The most commonly used flags with Audonizr are: ");
 		System.out.println("  -in   Specifies the input file location to the utility.");
@@ -41,9 +41,11 @@ public class Validator {
 		System.out.println("\nArguments in [] are optional and rest are mandatory.");
 	}
 	
-	public Object validate() {
-		return new Object();
+
+	public boolean validate() {
+		return true;
 	}
+	
 	
 	private String[] rawInput;  /* input recevied from user in command-line syntax */
 	private Object washedInput; /* validated and tested input parameters from rawInput */
