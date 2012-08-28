@@ -2,30 +2,26 @@ package com.audio;
 
 public class ValidatorTest implements Test {
 	
-	public void testValidate() {
-		System.out.println("Testing Validate....");
 		
-		// check for correct input
-		String[] testInput1 = {
-				"-in", 
-				"abc.mp3", 
-				"-out", 
-				"abc-out.mp3"
-		};
-		Validator v = new Validator(testInput1);
-		assert(v.validate());
+	private void test_isInputEmpty() {
 		
-		// check for 0 length input
-		String[] testInput2 = {};
-		v = new Validator(testInput2);
-		assert(!v.validate());
+		// content array is null
+		String[] test1 = null;
+		Validator val1 = new Validator(test1);
+		assert (val1.isInputEmpty());
 		
-		// check for illegal inputs
+		// content array is empty
+		String[] test2 = new String[] {};
+		Validator val2 = new Validator(test2);
+		assert (val2.isInputEmpty());
 		
-		System.out.println("Testing Validate passed...");
+		// single content array
+		String[] test3 = new String[] {"-in"};
+		Validator val3 = new Validator(test3);
+		assert (!val3.isInputEmpty());
 	}
 	
 	public void run() {
-		testValidate();
+		test_isInputEmpty();
 	}
 }

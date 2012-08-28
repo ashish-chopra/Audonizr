@@ -7,6 +7,8 @@
 package com.audio;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 
@@ -19,19 +21,17 @@ import java.io.File;
  *
  */
 public class Validator {
-
-	private static final boolean AUTO_PLAY_ON = true;
-	private static final boolean AUTO_PLAY_OFF = false;
+	
 	
 	/**
 	 * Creates a validator object 
-	 * @param args command-line inputs provided by user
+	 * @param args String array of inputs provided by user.
 	 */
 	public Validator(String[] args) {
 		this.rawInput = args;
 		this.inputAudio = null;
-		this.outputAudio = null;
-		this.autoPlay = AUTO_PLAY_OFF;
+		this.outputAudio = null; 
+		constructFlagCollection();
 	}
 	
 	/**
@@ -42,10 +42,10 @@ public class Validator {
 	 * 
 	 */
 	public void showUsageInstruction() {
-		System.out.println("usage: java Audonizr -in <file-name> [-out <file-name>] \n");
+		System.out.println("usage: java Audonizr -in <file-name> [-out <file-name>] [-play on|off] [-help] \n");
 		System.out.println("The most commonly used flags with Audonizr are: ");
-		System.out.println("  -in   Specifies the input file location to the utility.");
-		System.out.println("  -out  Specifies the ouput file location to the utility.");
+		System.out.println("  -in   <filename>   Specifies the input file location to the utility.");
+		System.out.println("  -out  <filename>   Specifies the ouput file location to the utility.");
 		System.out.println("\nArguments in [] are optional and rest are mandatory.");
 	}
 	
@@ -54,28 +54,43 @@ public class Validator {
 		if (isInputEmpty()) {
 			return false;
 		}
-		
-		boolean success = false;
-		boolean mandatory = false;
-		for (int i = 0; i < rawInput.length; i++) {
-			String text = rawInput[i];
-			int rank = getCommandId(text);
-			String argument = getCommandArguments(++i);
-			switch (rank) {
-			case 0 :
-			//	inputAudio = validateAudioFile(argument);
-				break;
-			case 1 : 
-				break;
-			default : 
-				System.out.println("Illegal Characters: " + text);
-				return false;
-			}
-		}
 		return true;
 	}
 	
-	private String getCommandArguments(int index) {
+	/**
+	 * gets the input audio file from the specified
+	 * flag options.
+	 * @return File object for input audio file
+	 */
+	public File getInputSource() {
+		return inputAudio;
+	}
+	
+	/**
+	 * gets the output audio file name from the specified
+	 * flag options
+	 * @return File object for output file
+	 */
+	public File getOutputSource() {
+		return outputAudio;
+	}
+	
+	private void constructFlagCollection() {
+		flags = new HashMap<String, Integer>();
+		flags.put("-in", 1);
+		flags.put("-out", 2);
+		
+	}
+
+	private int getFlagCode(String argument) {
+		String key = argument.toLowerCase();
+		if (flags.containsKey(key)) {
+			return flags.get(key);
+		}
+		return -1;
+	}
+	
+	private String getFlagArguments(int index) {
 		String argument = null;
 		try {
 			argument = rawInput[index];
@@ -83,25 +98,17 @@ public class Validator {
 		return argument;
 	}
 	
-	private int getCommandId(String flag) {
-		flag = flag.toLowerCase();
-		if (flag.equals("-in"))
-			return 0;
-		else if (flag.equals("-out"))
-			return 1;
-		return -1;
-	}
-	
 	/**
 	 * returns true if input array is empty.
 	 * @return true if input array is empty, false otherwise.
 	 */
-	private boolean isInputEmpty() {
-		return (rawInput.length == 0) ? true : false;
+	public boolean isInputEmpty() {
+		return (rawInput == null || rawInput.length == 0) ? true : false;
 	}
 	
-	private String[] rawInput;  /* input recevied from user in command-line syntax */
-	private File inputAudio;    /* input audio file */
-	private File outputAudio;   /* output audio file */
-	private boolean autoPlay;   /* set auto play feature on/off */
+	private Map<String, Integer> flags; /* Collection of flags used in this tool */
+	private String[] rawInput;  		/* input recevied from user in command-line syntax */
+	private File inputAudio;    		/* input audio file */
+	private File outputAudio;   		/* output audio file */
+	
 }
