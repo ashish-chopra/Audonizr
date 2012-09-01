@@ -114,7 +114,7 @@ public class Validator {
 	private File checkFileArgs(String args) {
 		File f = new File(args);
 		if(f.isFile()) return f;
-		System.out.println("Invalid file format.");
+		System.out.println("File does not exists.");
 		return null;
 	}
 	
