@@ -3,7 +3,8 @@ package com.audio;
 public class UnitTester {
 
 	private static final Test[] tests = {
-		new ValidatorTest()
+		new CommandLineInputTest(),
+		//new AudioEngineTest()
 	};
 	
 	
