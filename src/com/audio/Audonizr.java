@@ -16,12 +16,8 @@ public class Audonizr {
 
 	public static void main(String[] args) {
 		
-		Validator inputValidator = new Validator(args);
-		if (inputValidator.validate()) {
-			
-		} else {
-			inputValidator.showUsageInstruction();
-		}
+		CommandLineInput inputValidator = new CommandLineInput(args);
+		
 		
 	}
 }
