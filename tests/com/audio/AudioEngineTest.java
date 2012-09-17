@@ -16,8 +16,7 @@ public class AudioEngineTest implements Test{
 		fileOut = new File("tests/sounds/test1.wav");
 	}
 	private void test_reverse() {
-		AudioEngine aud = new AudioEngine(fileIn, fileOut);
-		aud.reverse();
+		
 	}
 	
 	private void test_getAudioInputStream() {
