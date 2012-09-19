@@ -11,6 +11,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
@@ -33,10 +35,7 @@ import com.audio.exceptions.AudioEngineException;
  */
 public class AudioEngine {
 
-	private static final int BUCKET_SIZE = 1024;
 	
-	private byte[] bucket;
-	private byte[] data;
 	private File fileInput;
 	private File fileOutput;
 	
@@ -44,19 +43,11 @@ public class AudioEngine {
 	private int sampleSize;
 	private AudioFormat format;
 	
-	private byte[] extractBytes(InputStream stream) {
-		
-		ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-		try {
-			while (true) {
-				int len = stream.read(bucket);
-				if (len == -1) break;
-				byteOut.write(bucket, 0, len);
-			}
-		} catch (IOException e) {
-			
-		}
-		return byteOut.toByteArray();
+	
+	public AudioEngine(String fileInLocation, String fileOutLocation) throws AudioEngineException {
+		fileInput = new File(fileInLocation);
+		fileOutput = new File(fileOutLocation);
+		setupInfrastructure();
 	}
 	
 	private void setupInfrastructure() throws AudioEngineException {
@@ -66,6 +57,7 @@ public class AudioEngine {
 			 format = stream.getFormat();
 			 sampleSize = format.getFrameSize();
 			 
+			 
 		} catch (IOException e) {
 			throw new AudioEngineException(e.getMessage());
 		} catch (UnsupportedAudioFileException e) {
@@ -74,35 +66,60 @@ public class AudioEngine {
 		
 	}
 	
-	public AudioEngine(String fileInLocation, String fileOutLocation) {
-		fileInput = new File(fileInLocation);
-		fileOutput = new File(fileOutLocation);
-		bucket = new byte[BUCKET_SIZE];
-	}
 	
 	public void reverse() throws AudioEngineException {
-			setupInfrastructure();
-			data = extractBytes(stream);
-			reverseSamplewise(data, sampleSize);
-			writeSamples(data, sampleSize, format, fileOutput);
+		
+			Sample[] samples = readAudioSamples(stream, sampleSize);
+			
+			int start = 0, end = samples.length;
+			while (start < end) {
+				Sample s = samples[start];
+				samples[start] = samples[end];
+				samples[end] = s;
+				start++;
+				end--;
+			}
+			writeAudioSamples(samples, sampleSize, format, fileOutput);
 	}
 		
-	private void reverseSamplewise(byte[] data, int size) {
-		int start = 0, end = data.length - size;
-		while (start < end) {
-			start += size;
-			end -= size;
+	
+	private Sample[] readAudioSamples(InputStream stream, int sampleSize) {
+		
+		byte[] bucket = new byte[sampleSize];
+		List<Sample> list = new ArrayList<Sample>();
+		try {
+			while (true) {
+				int len = stream.read(bucket);
+				if (len == -1) break;
+				Sample s = new Sample(bucket);
+				list.add(s);
+			}
+		} catch (IOException e) {
+			
 		}
+		return (Sample[]) list.toArray();
+		
 	}
 	
-	private void writeSamples(byte[] data, int size, AudioFormat format, File fileOut) {
-		AudioInputStream stream = new AudioInputStream(new ByteArrayInputStream(data), format, size);
+	private void writeAudioSamples(Sample[] samples, int size, AudioFormat format, File fileOut) {
+		
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		try {
-			AudioSystem.write(stream, AudioFileFormat.Type.WAVE, fileOut);
+			for(Sample s: samples) {
+				stream.write(s.getBytes());
+			}
+		} catch (IOException e) {
+			
+		}
+		
+		
+		AudioInputStream inputstream = new AudioInputStream(new 
+				ByteArrayInputStream(stream.toByteArray()), format, size);
+		try {
+			AudioSystem.write(inputstream, AudioFileFormat.Type.WAVE, fileOut);
 		} catch (IOException e) {
 			System.out.println("Some kind of IO error!");
 		}
-		
 	}
 }
 

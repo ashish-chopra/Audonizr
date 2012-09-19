@@ -7,7 +7,6 @@ public class AudioEngineTest implements Test{
 	File fileIn;
 	File fileOut;
 	public void run() {
-		test_getAudioInputStream();
 		test_reverse();
 	}
 	
@@ -16,10 +15,6 @@ public class AudioEngineTest implements Test{
 		fileOut = new File("tests/sounds/test1.wav");
 	}
 	private void test_reverse() {
-		
-	}
-	
-	private void test_getAudioInputStream() {
 		
 	}
 }
