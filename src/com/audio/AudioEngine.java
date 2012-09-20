@@ -7,15 +7,10 @@
 package com.audio;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -37,27 +32,32 @@ public class AudioEngine {
 
 	
 	private File fileInput;
-	private File fileOutput;
-	
+	private File fileOutput;	
 	private AudioInputStream stream;
-	private int sampleSize;
-	private AudioFormat format;
 	
-	
+	/**
+	 * Constructs the audioEngine object which carries out audio manipulation
+	 * and writing the audio content from input to output files.
+	 * 
+	 * @param fileInLocation input file path as String.
+	 * @param fileOutLocation output file path as String.
+	 * @throws AudioEngineException if the input audio file is unsupported.
+	 * 
+	 */
 	public AudioEngine(String fileInLocation, String fileOutLocation) throws AudioEngineException {
 		fileInput = new File(fileInLocation);
 		fileOutput = new File(fileOutLocation);
 		setupInfrastructure();
 	}
 	
+	/**
+	 * setup the audio stream provided the stream is correct format as supported
+	 * by the engine.
+	 * @throws AudioEngineException
+	 */
 	private void setupInfrastructure() throws AudioEngineException {
-		AudioInputStream stream = null;
 		try {
-			 stream = AudioSystem.getAudioInputStream(fileInput);
-			 format = stream.getFormat();
-			 sampleSize = format.getFrameSize();
-			 
-			 
+			 stream = AudioSystem.getAudioInputStream(fileInput); 
 		} catch (IOException e) {
 			throw new AudioEngineException(e.getMessage());
 		} catch (UnsupportedAudioFileException e) {
@@ -66,60 +66,39 @@ public class AudioEngine {
 		
 	}
 	
-	
+	/**
+	 * reverse the audio content given by input file and stores the 
+	 * result in output file.
+	 * 
+	 * @throws AudioEngineException
+	 */
 	public void reverse() throws AudioEngineException {
 		
-			Sample[] samples = readAudioSamples(stream, sampleSize);
+		try {
+			Audio data = new Audio(stream);
+			data.reverse();
+			writeOutputMedia(data);
 			
-			int start = 0, end = samples.length;
-			while (start < end) {
-				Sample s = samples[start];
-				samples[start] = samples[end];
-				samples[end] = s;
-				start++;
-				end--;
-			}
-			writeAudioSamples(samples, sampleSize, format, fileOutput);
+		} catch (IOException e) {
+			throw new AudioEngineException("Error occurred while writing output.");
+		}
+			
 	}
 		
-	
-	private Sample[] readAudioSamples(InputStream stream, int sampleSize) {
-		
-		byte[] bucket = new byte[sampleSize];
-		List<Sample> list = new ArrayList<Sample>();
-		try {
-			while (true) {
-				int len = stream.read(bucket);
-				if (len == -1) break;
-				Sample s = new Sample(bucket);
-				list.add(s);
-			}
-		} catch (IOException e) {
-			
-		}
-		return (Sample[]) list.toArray();
-		
-	}
-	
-	private void writeAudioSamples(Sample[] samples, int size, AudioFormat format, File fileOut) {
-		
-		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		try {
-			for(Sample s: samples) {
-				stream.write(s.getBytes());
-			}
-		} catch (IOException e) {
-			
-		}
-		
+	/**
+	 * writes the audio content to the output file provided
+	 * to the engine.
+	 * 
+	 * @param data Audio object representing audio.
+	 * @see com.audio.Audio
+	 * 
+	 */
+	private void writeOutputMedia(Audio data) throws IOException {
 		
 		AudioInputStream inputstream = new AudioInputStream(new 
-				ByteArrayInputStream(stream.toByteArray()), format, size);
-		try {
-			AudioSystem.write(inputstream, AudioFileFormat.Type.WAVE, fileOut);
-		} catch (IOException e) {
-			System.out.println("Some kind of IO error!");
-		}
+				ByteArrayInputStream(data.getBytes()), data.getFormat(), data.getSampleSize());
+		AudioSystem.write(inputstream, AudioFileFormat.Type.WAVE, fileOutput);
+		
 	}
 }
 

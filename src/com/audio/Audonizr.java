@@ -16,7 +16,6 @@ public class Audonizr {
 
 	public static void main(String[] args) {
 		
-		CommandLineInput inputValidator = new CommandLineInput(args);
 		
 		
 	}
