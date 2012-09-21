@@ -43,16 +43,18 @@ public class Audio {
 		if (samples != null) 
 			return samples;
 	
-		byte[] bucket = new byte[getSampleSize()];
-		List<Sample> content = new ArrayList<Sample>();
+		int size = getSampleSize();
+		byte[] bucket;
+		ArrayList<Sample> content = new ArrayList<Sample>();
 		try {
 			while (true) {
+				bucket = new byte[size];
 				int len = stream.read(bucket);
 				if (len == -1) break;
 				Sample s = new Sample(bucket);
 				content.add(s);
 			}
-			samples = (Sample[]) content.toArray();
+			samples = content.toArray(new Sample[content.size()]);
 		} catch (IOException e) {
 			
 		}
@@ -73,10 +75,12 @@ public class Audio {
 			for (Sample s : samples) {
 				byteOut.write(s.getBytes());
 			}
+			byteOut.flush();
 		}catch (IOException e) {
-			
+			System.out.println("io ex in getBytes()");
 		}
 		return byteOut.toByteArray();
+		
 	}
 	
 	/**
@@ -111,6 +115,12 @@ public class Audio {
 	 */
 	public int getSampleSize() {
 		return getFormat().getFrameSize();
+	}
+	
+	public int getSampleCount() {
+		if(samples == null)
+			getSamples();
+		return samples.length;
 	}
 	
 	/* Private Instance Variables */

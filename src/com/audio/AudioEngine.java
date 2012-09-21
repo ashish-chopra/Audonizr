@@ -96,7 +96,7 @@ public class AudioEngine {
 	private void writeOutputMedia(Audio data) throws IOException {
 		
 		AudioInputStream inputstream = new AudioInputStream(new 
-				ByteArrayInputStream(data.getBytes()), data.getFormat(), data.getSampleSize());
+				ByteArrayInputStream(data.getBytes()), data.getFormat(), data.getSampleCount());
 		AudioSystem.write(inputstream, AudioFileFormat.Type.WAVE, fileOutput);
 		
 	}
