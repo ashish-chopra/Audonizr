@@ -1,3 +1,9 @@
+/*
+ *  File: Audio.java
+ *  Date: 15 Sept, 2012
+ *  Author: Ashish Chopra
+ *  
+ */
 package com.audio;
 
 import java.io.ByteArrayOutputStream;
@@ -9,15 +15,30 @@ import java.util.List;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 
+/**
+ * Audio class represents the audio data read from a AudioStream
+ * given to the object during construction. The class is mutable.
+ * The manipulation done on the audio data are persisted in place.
+ * 
+ * @author Ashish Chopra
+ * @version 1.0
+ * 
+ */
 public class Audio {
 
-	InputStream stream;
-	Sample[] samples;
 	
+	/**
+	 * Creates an Audio object given an audio stream.
+	 * @param stream a valid audio stream.
+	 */
 	public Audio(InputStream stream) {
 		this.stream = stream;
 	}
 	
+	/**
+	 * gets the array of samples contained in the audio content.
+	 * @return array of samples.
+	 */
 	public Sample[] getSamples() {
 		if (samples != null) 
 			return samples;
@@ -38,6 +59,10 @@ public class Audio {
 		return samples;
 	}
 	
+	/**
+	 * gets the array of bytes representing audio content.
+	 * @return
+	 */
 	public byte[] getBytes() {
 		
 		if(samples == null)
@@ -54,6 +79,10 @@ public class Audio {
 		return byteOut.toByteArray();
 	}
 	
+	/**
+	 * reverses the samples in the audio stream in place.
+	 * 
+	 */
 	public void reverse() {
 		getSamples();
 		
@@ -67,11 +96,25 @@ public class Audio {
 		}
 	}
 	
+	/**
+	 * gets the format object representing the format
+	 * of audio content.
+	 * @return AudioFormat representation of audio stream
+	 */
 	public AudioFormat getFormat() {
 		return ((AudioInputStream) stream).getFormat();
 	}
 	
+	/**
+	 * gets the size of each sample in number of bytes.
+	 * @return size of sample as integer.
+	 */
 	public int getSampleSize() {
 		return getFormat().getFrameSize();
 	}
+	
+	/* Private Instance Variables */
+	
+	private InputStream stream;  /* Audio stream of the audio file */
+	private Sample[] samples;    /* Audio representation in array of samples */
 }

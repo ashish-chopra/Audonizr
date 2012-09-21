@@ -5,7 +5,6 @@
  *  
  */
 package com.audio;
-
 import com.audio.exceptions.InputParseException;
 
 
@@ -40,25 +39,6 @@ public class CommandLineInput {
 		autoPlay = getOptionalArgsAt(2);
 	}
 	
-	private String getMandatoryArgsAt(int index) throws InputParseException {
-		if(rawInput.length <= index || isFlag(rawInput[index])) 
-			throw new InputParseException("Incorrect usage: Missing mandatory arguments.");
-		else
-			return rawInput[index];
-	}
-
-	private boolean getOptionalArgsAt(int index) throws InputParseException {
-		if(rawInput.length <= index)
-			return false;
-		else if (isFlag(rawInput[index]) && rawInput[index].equals("-p"))
-			return true;
-		else 
-			throw new InputParseException("Incorrect usage: Illegal flags used.");
-	}
-	
-	private boolean isFlag(String flag) {
-		return flag.startsWith("-");
-	}
 	
 	/**
 	 * tests whether the input array is empty.
@@ -91,16 +71,46 @@ public class CommandLineInput {
 		return sb.toString();
 	}
 	
+	/**
+	 * gets the input audio file path, if provided by user.
+	 * @return file path as String, null otherwise.
+	 */
 	public String getInputFilePath() {
 		return fileInPath;
 	}
 	
+	/**
+	 * gets the output audio file path, if provided by user.
+	 * @return file path as String, null otherwise.
+	 */
 	public String getOutputFilePath() {
 		return fileOutPath;
 	}
 	
-	private String[] rawInput;
-	private String fileInPath;
-	private String fileOutPath;
-	private boolean autoPlay;
+	private String getMandatoryArgsAt(int index) throws InputParseException {
+		if(rawInput.length <= index || isFlag(rawInput[index])) 
+			throw new InputParseException("Incorrect usage: Missing mandatory arguments.");
+		else
+			return rawInput[index];
+	}
+
+	private boolean getOptionalArgsAt(int index) throws InputParseException {
+		if(rawInput.length <= index)
+			return false;
+		else if (isFlag(rawInput[index]) && rawInput[index].equals("-p"))
+			return true;
+		else 
+			throw new InputParseException("Incorrect usage: Illegal flags used.");
+	}
+	
+	private boolean isFlag(String flag) {
+		return flag.startsWith("-");
+	}
+	
+	/* PRIVATE INSTANCE VARIABLES */
+	
+	private String[] rawInput;  /* array of raw String input in command line */
+	private String fileInPath;  /* input audio file location */
+	private String fileOutPath; /* ouput audio file location */
+	private boolean autoPlay;   /* automatic playback of output */
 }

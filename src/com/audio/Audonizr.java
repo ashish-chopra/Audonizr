@@ -6,7 +6,7 @@ package com.audio;
  * which hides the cryptographic messages.
  * 
  * It accepts command-line options and flags. To know its usage type
- * <code>java Audonizr -help</code>
+ * <code>java Audonizr</code>
  * 
  * @author Ashish Chopra
  * @version 1.0

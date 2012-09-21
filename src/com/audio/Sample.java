@@ -17,7 +17,6 @@ package com.audio;
  */
 public class Sample {
 
-	
 	/**
 	 * constructs the sample object abstracting a collection
 	 * of bytes as audio sample.
@@ -43,5 +42,6 @@ public class Sample {
 		return content;
 	}
 	
-	private byte[] content;			/* array of bytes representing audio samples */
+	/* array of bytes representing audio samples */
+	private byte[] content;	 
 }
