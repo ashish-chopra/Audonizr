@@ -9,6 +9,8 @@ Audonizr is a command-line utility to reverse the audio files. It is useful for 
 This utility accepts various command-line arguments to customize the conversion process.
 The Audonizr project is still in early development phase. You can read more about the development roadmap [here](https://github.com/ashish-chopra/Audonizr/wiki/Roadmap).
 
+In order to know more about the design aspect of the utility, please read the [design report](https://github.com/ashish-chopra/Audonizr/wiki/Design-Report) in the Wiki section, outlining the important design decisions taken and learnings
+acquired during development.
 
 ### How to Run 
 
@@ -20,14 +22,14 @@ This project is developed in Eclipse IDE environment. The downloaded source code
 
 In order to run,
 
-    java Audonizr -in <path-to-input-file> -out <path-to-output-file>
+    java Audonizr <path-to-input-file> <path-to-output-file> [-p]
 
 In order to run tests, in tests/com folder, find UnitTester.java and AcceptanceTester.java which runs the test suites as, 
 
     java -ea UnitTester            // to run unit test suite of Audonizr
-    java -ea AcceptanceTester     // to run acceptance tests suite
-    
-    
+
+For more details on usage, please read a design report [here](https://github.com/ashish-chopra/Audonizr/wiki/Design-Report).
+
 ### License
 
 This project is licensed under MIT License.
